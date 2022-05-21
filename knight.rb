@@ -15,22 +15,9 @@ class Knight
     queue_array << initial_position_array
 
     until queue_array.empty?
-      # puts "Queue array: #{queue_array}"
-    
       current_node_position_array = queue_array.shift 
-      # p "Children of #{current_node_position_array}: #{board.board_grid[current_node_position_array[0]][current_node_position_array[1]].adjacent_node_positions}"
-      
 
       if current_node_position_array == destination_position_array
-        # puts '----------------------'
-        # parent_node_position_array = board.board_grid[current_node_position_array[0]][current_node_position_array[1]].parent
-        # p parent_node_position_array
-        # parent_node_position_array = board.board_grid[parent_node_position_array[0]][parent_node_position_array[1]].parent
-        # p parent_node_position_array
-        # parent_node_position_array = board.board_grid[parent_node_position_array[0]][parent_node_position_array[1]].parent
-        # p parent_node_position_array
-
-        
         path_array << destination_position_array
         parent_node_position_array = board.board_grid[current_node_position_array[0]][current_node_position_array[1]].parent 
         path_array << parent_node_position_array unless board.board_grid[current_node_position_array[0]][current_node_position_array[1]].parent.nil?
@@ -39,15 +26,23 @@ class Knight
           parent_node_position_array = board.board_grid[parent_node_position_array[0]][parent_node_position_array[1]].parent
           path_array << parent_node_position_array
           break if board.board_grid[parent_node_position_array[0]][parent_node_position_array[1]].parent.nil?
-          # p parent_node_position_array
+        end
+
+        chess_coordinates_path_array = []
+        path_array.reverse!.each do |path_coordinates|
+          chess_coordinates_path_array << board.board_grid[path_coordinates[0]][path_coordinates[1]].chess_coordinates
         end
        
-        # puts '----------------------'
-        return "You made it in #{path_array.length - 1} moves!  Here's your path: #{path_array.reverse}"
+        puts "#{path_array.length - 1} moves from #{chess_coordinates_path_array.first} to #{chess_coordinates_path_array.last}..."
+        puts "Here's your path: "
+        chess_coordinates_path_array.each_with_index do |coordinate, number_of_spaces|
+          puts coordinate
+          (number_of_spaces + 1).times { print "\t" }
+        end
+
+        break
       end
 
-      # p current_node_position_array
-      
       board.board_grid[current_node_position_array[0]][current_node_position_array[1]].adjacent_node_positions.each do |adjacent_node_position_array|
         queue_array << adjacent_node_position_array
         next if adjacent_node_position_array == board.board_grid[current_node_position_array[0]][current_node_position_array[1]].parent
